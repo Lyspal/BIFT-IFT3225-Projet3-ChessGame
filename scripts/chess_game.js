@@ -23,22 +23,34 @@ var ChessGame = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (ChessGame.__proto__ || Object.getPrototypeOf(ChessGame)).call(this, props));
 
-    _this.state = { liked: false };
+    _this.state = {
+      whiteIsNext: true
+    };
     return _this;
   }
 
   _createClass(ChessGame, [{
     key: "render",
     value: function render() {
+      var status = "Prochain joueur : " + (this.state.whiteIsNext ? "blanc" : "noir");
+
       return React.createElement(
         "div",
         { className: "game" },
         React.createElement(
           "div",
+          { className: "game-info" },
+          React.createElement(
+            "div",
+            null,
+            status
+          )
+        ),
+        React.createElement(
+          "div",
           { className: "game-board" },
           React.createElement(Board, null)
-        ),
-        React.createElement("div", { className: "game-info" })
+        )
       );
     }
   }]);

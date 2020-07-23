@@ -14,14 +14,15 @@ class ChessGame extends React.Component {
   }
 
   render() {
-    if (this.state.liked) {
-      return 'You liked this.';
-    }
-
     return (
-      <button onClick={() => this.setState({ liked: true })}>
-        Like
-      </button>
+      <div className="game">
+        <div className="game-board">
+          <Board/>
+        </div>
+        <div className="game-info">
+          
+        </div>
+      </div>
     );
   }
 }

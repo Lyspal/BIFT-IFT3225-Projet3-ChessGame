@@ -18,30 +18,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Square = function (_React$Component) {
   _inherits(Square, _React$Component);
 
-  function Square(props) {
+  function Square() {
     _classCallCheck(this, Square);
 
-    var _this = _possibleConstructorReturn(this, (Square.__proto__ || Object.getPrototypeOf(Square)).call(this, props));
-
-    _this.state = { liked: false };
-    return _this;
+    return _possibleConstructorReturn(this, (Square.__proto__ || Object.getPrototypeOf(Square)).apply(this, arguments));
   }
 
   _createClass(Square, [{
-    key: 'render',
+    key: "render",
     value: function render() {
-      var _this2 = this;
-
-      if (this.state.liked) {
-        return 'You liked this.';
-      }
-
       return React.createElement(
-        'button',
-        { onClick: function onClick() {
-            return _this2.setState({ liked: true });
-          } },
-        'Like'
+        "div",
+        { className: "square" },
+        React.createElement(Piece, null)
       );
     }
   }]);

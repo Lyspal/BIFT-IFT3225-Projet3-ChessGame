@@ -1,0 +1,34 @@
+img {
+    width: 100%;
+}
+
+.game {
+    display: flex;
+    max-height: 100vh;
+    flex-direction: row;
+}
+
+/* .game-board {
+    width: 66%;
+}
+
+.game-info {
+    width: 33%;
+} */
+
+.board-row {
+    min-width: 90%;
+}
+
+.square {
+    position: relative;
+    float: left;
+    width: 12%;
+    text-align: center;
+    background-color: #a0ffff;
+}
+
+.board-row:nth-child(even) .square:nth-child(even),
+.board-row:nth-child(odd) .square:nth-child(odd) {
+    background-color: #00efef;
+}

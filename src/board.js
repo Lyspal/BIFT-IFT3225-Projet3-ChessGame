@@ -8,22 +8,19 @@
 // code original sont citées en commentaire du code adapté.
 
 class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { liked: false };
-  }
-
   renderSquare(i, j) {
+    console.log(i);
+    console.log(j);
     return (
       <Square
-        
+        piece={this.props.squares[i][j]}
       />
     );
   }
 
   render() {
     return (
-      <div>
+      <div className="game-board">
         <div className="board-row">
           {this.renderSquare("a", 1)}
           {this.renderSquare("a", 2)}

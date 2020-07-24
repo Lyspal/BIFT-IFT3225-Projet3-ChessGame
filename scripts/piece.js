@@ -8,5 +8,8 @@
 // code original sont citées en commentaire du code adapté.
 
 function Piece(props) {
-    return React.createElement("img", { className: "piece", src: "images/B-B.svg", alt: "" });
+    var value = props.value !== "" ? props.value : "empty";
+    var src = "images/" + value + ".svg";
+
+    return React.createElement("img", { className: "piece", src: src, alt: "" });
 }

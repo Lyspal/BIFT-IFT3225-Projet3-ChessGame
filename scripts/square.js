@@ -30,7 +30,9 @@ var Square = function (_React$Component) {
       return React.createElement(
         "div",
         { className: "square" },
-        React.createElement(Piece, null)
+        React.createElement(Piece, {
+          value: this.props.piece
+        })
       );
     }
   }]);

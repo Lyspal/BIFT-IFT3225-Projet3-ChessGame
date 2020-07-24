@@ -23,7 +23,9 @@ var ChessGame = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (ChessGame.__proto__ || Object.getPrototypeOf(ChessGame)).call(this, props));
 
+    _this.init = "{\n      \"a\": {\n        \"1\": \"R-B\",\n        \"2\": \"N-B\",\n        \"3\": \"B-B\",\n        \"4\": \"Q-B\",\n        \"5\": \"K-B\",\n        \"6\": \"B-B\",\n        \"7\": \"N-B\",\n        \"8\": \"R-B\"\n      },\n      \"b\": {\n        \"1\": \"P-B\",\n        \"2\": \"P-B\",\n        \"3\": \"P-B\",\n        \"4\": \"P-B\",\n        \"5\": \"P-B\",\n        \"6\": \"P-B\",\n        \"7\": \"P-B\",\n        \"8\": \"P-B\"\n      },\n      \"c\": {\n        \"1\": \"\",\n        \"2\": \"\",\n        \"3\": \"\",\n        \"4\": \"\",\n        \"5\": \"\",\n        \"6\": \"\",\n        \"7\": \"\",\n        \"8\": \"\"\n      },\n      \"d\": {\n        \"1\": \"\",\n        \"2\": \"\",\n        \"3\": \"\",\n        \"4\": \"\",\n        \"5\": \"\",\n        \"6\": \"\",\n        \"7\": \"\",\n        \"8\": \"\"\n      },\n      \"e\": {\n        \"1\": \"\",\n        \"2\": \"\",\n        \"3\": \"\",\n        \"4\": \"\",\n        \"5\": \"\",\n        \"6\": \"\",\n        \"7\": \"\",\n        \"8\": \"\"\n      },\n      \"f\": {\n        \"1\": \"\",\n        \"2\": \"\",\n        \"3\": \"\",\n        \"4\": \"\",\n        \"5\": \"\",\n        \"6\": \"\",\n        \"7\": \"\",\n        \"8\": \"\"\n      },\n      \"g\": {\n        \"1\": \"P-W\",\n        \"2\": \"P-W\",\n        \"3\": \"P-W\",\n        \"4\": \"P-W\",\n        \"5\": \"P-W\",\n        \"6\": \"P-W\",\n        \"7\": \"P-W\",\n        \"8\": \"P-W\"\n      },\n      \"h\": {\n        \"1\": \"R-W\",\n        \"2\": \"N-W\",\n        \"3\": \"B-W\",\n        \"4\": \"Q-W\",\n        \"5\": \"K-W\",\n        \"6\": \"B-W\",\n        \"7\": \"N-W\",\n        \"8\": \"R-W\"\n      }\n    }";
     _this.state = {
+      squares: JSON.parse(_this.init),
       whiteIsNext: true
     };
     return _this;
@@ -46,11 +48,9 @@ var ChessGame = function (_React$Component) {
             status
           )
         ),
-        React.createElement(
-          "div",
-          { className: "game-board" },
-          React.createElement(Board, null)
-        )
+        React.createElement(Board, {
+          squares: this.state.squares
+        })
       );
     }
   }]);
@@ -60,3 +60,5 @@ var ChessGame = function (_React$Component) {
 
 var domContainer = document.querySelector('#chess_game');
 ReactDOM.render(React.createElement(ChessGame, null), domContainer);
+
+// ============================================================================

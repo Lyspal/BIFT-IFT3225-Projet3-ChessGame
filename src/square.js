@@ -11,7 +11,9 @@ class Square extends React.Component {
   render() {
     return (
       <div className="square">
-        <Piece/>
+        <Piece
+          value={this.props.piece}
+        />
       </div>
     );
   }

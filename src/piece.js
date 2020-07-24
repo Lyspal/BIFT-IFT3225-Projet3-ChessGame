@@ -8,7 +8,10 @@
 // code original sont citées en commentaire du code adapté.
 
 function Piece(props) {
+    let value = props.value !== "" ? props.value : "empty";
+    let src = "images/" + value + ".svg";
+
     return (
-        <img className="piece" src="images/B-B.svg" alt=""></img>
+        <img className="piece" src={src} alt=""></img>
     );
   }

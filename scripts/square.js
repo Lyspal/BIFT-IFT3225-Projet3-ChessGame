@@ -29,7 +29,7 @@ var Square = function (_React$Component) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: "square" },
+        { id: this.props.id, className: "square", onClick: this.props.onClick },
         React.createElement(Piece, {
           value: this.props.piece
         })

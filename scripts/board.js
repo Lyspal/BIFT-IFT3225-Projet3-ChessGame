@@ -27,10 +27,15 @@ var Board = function (_React$Component) {
   _createClass(Board, [{
     key: "renderSquare",
     value: function renderSquare(i, j) {
-      console.log(i);
-      console.log(j);
+      var _this2 = this;
+
+      var id = i + j;
       return React.createElement(Square, {
-        piece: this.props.squares[i][j]
+        id: id,
+        piece: this.props.squares[i][j],
+        onClick: function onClick() {
+          return _this2.props.onClick(i, j);
+        }
       });
     }
   }, {

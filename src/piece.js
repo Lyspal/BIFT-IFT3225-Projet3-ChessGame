@@ -9,7 +9,7 @@
 
 function Piece(props) {
     let value = props.value !== "" ? props.value : "empty";
-    let src = "images/" + value + ".svg";
+    let src = `images/${value}.svg`;
 
     return (
         <img className="piece" src={src} alt=""></img>

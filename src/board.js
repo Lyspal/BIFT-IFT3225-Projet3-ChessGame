@@ -9,11 +9,12 @@
 
 class Board extends React.Component {
   renderSquare(i, j) {
-    console.log(i);
-    console.log(j);
+    let id = i + j;
     return (
       <Square
+        id={id}
         piece={this.props.squares[i][j]}
+        onClick={() => this.props.onClick(i, j)}
       />
     );
   }

@@ -10,7 +10,7 @@
 class Square extends React.Component {
   render() {
     return (
-      <div className="square">
+      <div id={this.props.id} className="square" onClick={this.props.onClick}>
         <Piece
           value={this.props.piece}
         />

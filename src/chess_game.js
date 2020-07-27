@@ -141,7 +141,7 @@ class ChessGame extends React.Component {
         // Coup de capture.
         let enemy = this.state.whiteIsNext ? "B" : "W";
         let isEnemy = this.state.squares[i][j].charAt(2) === enemy;
-        let isDiagMove = (Math.abs(numI - fromI) === 1) && (Math.abs(j - fromJ));
+        let isDiagMove = (numI - fromI === 1) && (Math.abs(j - fromJ) === 1);
         let isCapture = isDiagMove && isEnemy;
         return isPremier || isReg || isCapture;
       case 'R':
@@ -153,7 +153,7 @@ class ChessGame extends React.Component {
       case 'Q':
         return true;
       case 'K':
-        return true;
+        return (Math.abs(numI - fromI) <= 1) && (Math.abs(j - fromJ));;
       default:
         return false;
     }
@@ -167,6 +167,7 @@ class ChessGame extends React.Component {
       if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
         document.getElementById(i + j).classList.add("clicked");
         this.setState({
+          // Update move state.
           isFirstClick: !this.state.isFirstClick,
           fromI: i,
           fromJ: j,
@@ -176,12 +177,13 @@ class ChessGame extends React.Component {
       let fromI = this.state.fromI;
       let fromJ = this.state.fromJ;
       let movingPiece = this.state.squares[fromI][fromJ];
-      let prevSquare = document.getElementById(fromI + fromJ);
+      let originSquare = document.getElementById(fromI + fromJ);
 
       // If click the same square, unselect it. 
       if (i === fromI && j === fromJ) {
-        prevSquare.classList.remove("clicked");
+        originSquare.classList.remove("clicked");
         this.setState({
+          // Reset move state.
           isFirstClick: !this.state.isFirstClick,
           fromI: "",
           fromJ: 0,
@@ -191,7 +193,8 @@ class ChessGame extends React.Component {
           !this.isCurrentPlayerPiece(clickedPiece) &&
           this.isMoveLegal(movingPiece, i, j)
         ) {
-          // Swap squares' states.
+          // Update squares' states.
+          originSquare.classList.remove("clicked");
           this.setState(prevState => ({
             squares: {
               ...prevState.squares,
@@ -212,8 +215,6 @@ class ChessGame extends React.Component {
             isFirstWhiteMove: false,
             isFirstBlackMove: this.state.isFirstWhiteMove ? true : false,
           }));
-          // Remove selection indicator.
-          prevSquare.classList.remove("clicked");
         }
       }
     }

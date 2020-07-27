@@ -79,7 +79,7 @@ var ChessGame = function (_React$Component) {
           // Coup de capture.
           var enemy = this.state.whiteIsNext ? "B" : "W";
           var isEnemy = this.state.squares[i][j].charAt(2) === enemy;
-          var isDiagMove = Math.abs(numI - fromI) === 1 && Math.abs(j - fromJ);
+          var isDiagMove = numI - fromI === 1 && Math.abs(j - fromJ) === 1;
           var isCapture = isDiagMove && isEnemy;
           return isPremier || isReg || isCapture;
         case 'R':
@@ -91,7 +91,7 @@ var ChessGame = function (_React$Component) {
         case 'Q':
           return true;
         case 'K':
-          return true;
+          return Math.abs(numI - fromI) <= 1 && Math.abs(j - fromJ);;
         default:
           return false;
       }
@@ -108,6 +108,7 @@ var ChessGame = function (_React$Component) {
         if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
           document.getElementById(i + j).classList.add("clicked");
           this.setState({
+            // Update move state.
             isFirstClick: !this.state.isFirstClick,
             fromI: i,
             fromJ: j
@@ -118,12 +119,13 @@ var ChessGame = function (_React$Component) {
         var fromI = this.state.fromI;
         var fromJ = this.state.fromJ;
         var movingPiece = this.state.squares[fromI][fromJ];
-        var prevSquare = document.getElementById(fromI + fromJ);
+        var originSquare = document.getElementById(fromI + fromJ);
 
         // If click the same square, unselect it. 
         if (i === fromI && j === fromJ) {
-          prevSquare.classList.remove("clicked");
+          originSquare.classList.remove("clicked");
           this.setState({
+            // Reset move state.
             isFirstClick: !this.state.isFirstClick,
             fromI: "",
             fromJ: 0
@@ -131,7 +133,8 @@ var ChessGame = function (_React$Component) {
         } else {
           // Else, try moving the piece.
           if (!this.isCurrentPlayerPiece(clickedPiece) && this.isMoveLegal(movingPiece, i, j)) {
-            // Swap squares' states.
+            // Update squares' states.
+            originSquare.classList.remove("clicked");
             this.setState(function (prevState) {
               var _Object$assign3;
 
@@ -146,8 +149,6 @@ var ChessGame = function (_React$Component) {
                 isFirstBlackMove: _this2.state.isFirstWhiteMove ? true : false
               };
             });
-            // Remove selection indicator.
-            prevSquare.classList.remove("clicked");
           }
         }
       }

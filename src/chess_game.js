@@ -126,14 +126,13 @@ class ChessGame extends React.Component {
     console.log(`${fromI}, ${fromJ}`);
 
     // Ne pas capturer sa propre pièce.
-    if (this.state.squares[i][j])
+    // if (this.state.squares[i][j])
 
     switch (piece.charAt(0)) {
       case 'P':
         // TODO Cas du premier coup.
         let isStartPos = fromI === 2;
         let inFront = this.state.whiteIsNext ? "f" : "c";
-        console.log(i - 1);
         let isMiddleEmpty = this.state.squares[inFront][fromJ] === "";
         let isUpByTwo = (numI - fromI === 2) && (j - fromJ === 0);
         let isPremier = isStartPos && isUpByTwo && isMiddleEmpty;
@@ -161,50 +160,61 @@ class ChessGame extends React.Component {
   }
 
   handleClick(i, j) {
-    let square = document.getElementById(i + j);
-    let currentPiece = this.state.squares[i][j];
-    // First, click a square containing a piece.
+    let clickedPiece = this.state.squares[i][j];
+
+    // First, click a square containing a current player's piece.
     if (this.state.isFirstClick) {
-      if (currentPiece !== "" && this.isCurrentPlayerPiece(currentPiece)) {
-        square.classList.add("clicked");
+      if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
+        document.getElementById(i + j).classList.add("clicked");
         this.setState({
           isFirstClick: !this.state.isFirstClick,
           fromI: i,
           fromJ: j,
         })
       }
-    // Then, click to its destination.
-    } else {
+    } else {  // Then, click the destination square to move the piece.
       let fromI = this.state.fromI;
       let fromJ = this.state.fromJ;
       let movingPiece = this.state.squares[fromI][fromJ];
+      let prevSquare = document.getElementById(fromI + fromJ);
 
-      if ((i !== fromI || j !== fromJ) && this.isMoveLegal(movingPiece, i, j)) {
-        let firstSquare = document.getElementById(fromI + fromJ);
-        // Swap squares' states.
-        let firstState = this.state.squares[fromI][fromJ];
-        this.setState(prevState => ({
-          squares: {
-            ...prevState.squares,
-            [i]: {
-              ...prevState.squares[i],
-              [j]: firstState,
-            },
-            [fromI]: {
-              ...prevState.squares[fromI],
-              [fromJ]: "",
-            }
-          },
-          // Reset move state.
-          isFirstClick: !prevState.isFirstClick,
+      // If click the same square, unselect it. 
+      if (i === fromI && j === fromJ) {
+        prevSquare.classList.remove("clicked");
+        this.setState({
+          isFirstClick: !this.state.isFirstClick,
           fromI: "",
           fromJ: 0,
-          whiteIsNext: !prevState.whiteIsNext,
-          isFirstWhiteMove: false,
-          isFirstBlackMove: this.state.isFirstWhiteMove ? true : false,
-        }));
-        // Remove selection indicator.
-        firstSquare.classList.remove("clicked");
+        });
+      } else {  // Else, try moving the piece.
+        if (
+          !this.isCurrentPlayerPiece(clickedPiece) &&
+          this.isMoveLegal(movingPiece, i, j)
+        ) {
+          // Swap squares' states.
+          this.setState(prevState => ({
+            squares: {
+              ...prevState.squares,
+              [i]: {
+                ...prevState.squares[i],
+                [j]: movingPiece,
+              },
+              [fromI]: {
+                ...prevState.squares[fromI],
+                [fromJ]: "",
+              }
+            },
+            // Reset move state.
+            isFirstClick: !prevState.isFirstClick,
+            fromI: "",
+            fromJ: 0,
+            whiteIsNext: !prevState.whiteIsNext,
+            isFirstWhiteMove: false,
+            isFirstBlackMove: this.state.isFirstWhiteMove ? true : false,
+          }));
+          // Remove selection indicator.
+          prevSquare.classList.remove("clicked");
+        }
       }
     }
   }

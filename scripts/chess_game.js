@@ -64,12 +64,13 @@ var ChessGame = function (_React$Component) {
       console.log(fromI + ", " + fromJ);
 
       // Ne pas capturer sa propre pièce.
-      if (this.state.squares[i][j]) switch (piece.charAt(0)) {
+      // if (this.state.squares[i][j])
+
+      switch (piece.charAt(0)) {
         case 'P':
           // TODO Cas du premier coup.
           var isStartPos = fromI === 2;
           var inFront = this.state.whiteIsNext ? "f" : "c";
-          console.log(i - 1);
           var isMiddleEmpty = this.state.squares[inFront][fromJ] === "";
           var isUpByTwo = numI - fromI === 2 && j - fromJ === 0;
           var isPremier = isStartPos && isUpByTwo && isMiddleEmpty;
@@ -100,44 +101,54 @@ var ChessGame = function (_React$Component) {
     value: function handleClick(i, j) {
       var _this2 = this;
 
-      var square = document.getElementById(i + j);
-      var currentPiece = this.state.squares[i][j];
-      // First, click a square containing a piece.
+      var clickedPiece = this.state.squares[i][j];
+
+      // First, click a square containing a current player's piece.
       if (this.state.isFirstClick) {
-        if (currentPiece !== "" && this.isCurrentPlayerPiece(currentPiece)) {
-          square.classList.add("clicked");
+        if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
+          document.getElementById(i + j).classList.add("clicked");
           this.setState({
             isFirstClick: !this.state.isFirstClick,
             fromI: i,
             fromJ: j
           });
         }
-        // Then, click to its destination.
       } else {
+        // Then, click the destination square to move the piece.
         var fromI = this.state.fromI;
         var fromJ = this.state.fromJ;
         var movingPiece = this.state.squares[fromI][fromJ];
+        var prevSquare = document.getElementById(fromI + fromJ);
 
-        if ((i !== fromI || j !== fromJ) && this.isMoveLegal(movingPiece, i, j)) {
-          var firstSquare = document.getElementById(fromI + fromJ);
-          // Swap squares' states.
-          var firstState = this.state.squares[fromI][fromJ];
-          this.setState(function (prevState) {
-            var _Object$assign3;
-
-            return {
-              squares: Object.assign({}, prevState.squares, (_Object$assign3 = {}, _defineProperty(_Object$assign3, i, Object.assign({}, prevState.squares[i], _defineProperty({}, j, firstState))), _defineProperty(_Object$assign3, fromI, Object.assign({}, prevState.squares[fromI], _defineProperty({}, fromJ, ""))), _Object$assign3)),
-              // Reset move state.
-              isFirstClick: !prevState.isFirstClick,
-              fromI: "",
-              fromJ: 0,
-              whiteIsNext: !prevState.whiteIsNext,
-              isFirstWhiteMove: false,
-              isFirstBlackMove: _this2.state.isFirstWhiteMove ? true : false
-            };
+        // If click the same square, unselect it. 
+        if (i === fromI && j === fromJ) {
+          prevSquare.classList.remove("clicked");
+          this.setState({
+            isFirstClick: !this.state.isFirstClick,
+            fromI: "",
+            fromJ: 0
           });
-          // Remove selection indicator.
-          firstSquare.classList.remove("clicked");
+        } else {
+          // Else, try moving the piece.
+          if (!this.isCurrentPlayerPiece(clickedPiece) && this.isMoveLegal(movingPiece, i, j)) {
+            // Swap squares' states.
+            this.setState(function (prevState) {
+              var _Object$assign3;
+
+              return {
+                squares: Object.assign({}, prevState.squares, (_Object$assign3 = {}, _defineProperty(_Object$assign3, i, Object.assign({}, prevState.squares[i], _defineProperty({}, j, movingPiece))), _defineProperty(_Object$assign3, fromI, Object.assign({}, prevState.squares[fromI], _defineProperty({}, fromJ, ""))), _Object$assign3)),
+                // Reset move state.
+                isFirstClick: !prevState.isFirstClick,
+                fromI: "",
+                fromJ: 0,
+                whiteIsNext: !prevState.whiteIsNext,
+                isFirstWhiteMove: false,
+                isFirstBlackMove: _this2.state.isFirstWhiteMove ? true : false
+              };
+            });
+            // Remove selection indicator.
+            prevSquare.classList.remove("clicked");
+          }
         }
       }
     }

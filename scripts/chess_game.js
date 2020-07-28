@@ -239,12 +239,12 @@ var ChessGame = function (_React$Component) {
           { className: "game-controls" },
           React.createElement(
             "button",
-            { className: "btn btn-secondary", onClick: this.restart },
+            { className: "btn btn-secondary btn-sm", onClick: this.restart },
             "Recommencer"
           ),
           React.createElement(
             "button",
-            { className: "btn btn-secondary", onClick: this.load },
+            { className: "btn btn-secondary btn-sm", onClick: this.load },
             "Charger sauvegarde"
           )
         ),

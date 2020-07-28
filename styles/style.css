@@ -1,12 +1,15 @@
 .game {
     width: 100%;
-    max-width: 100vh;
+    max-width: 75vh;
     margin: 1rem 0;
     text-align: center;
 }
 
 .game-controls {
     margin: 0 auto 1.5rem auto;
+}
+@media screen and (min-width: 350px) {
+
 }
 
 .game-controls .btn:first-child {

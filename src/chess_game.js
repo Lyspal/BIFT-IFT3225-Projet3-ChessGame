@@ -294,8 +294,8 @@ class ChessGame extends React.Component {
           <p>{status}</p>
         </div>
         <div className="game-controls">
-          <button className="btn btn-secondary" onClick={this.restart}>Recommencer</button>
-          <button className="btn btn-secondary" onClick={this.load}>Charger sauvegarde</button>
+          <button className="btn btn-secondary btn-sm" onClick={this.restart}>Recommencer</button>
+          <button className="btn btn-secondary btn-sm" onClick={this.load}>Charger sauvegarde</button>
         </div>
         <Board
           squares={this.state.squares}

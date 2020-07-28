@@ -4,8 +4,9 @@
 // program: chess_game.js
 // date: 2020-07-29
 // object: Component React pour le jeu d'échecs
-// Le présent code contient ______ adaptations de code tiers. Les sources du
-// code original sont citées en commentaire du code adapté.
+// La forme du présent code s'inspire du tutoriel introductif officiel de
+// React, disponible à l'adresse : https://reactjs.org/tutorial/tutorial.html,
+// que nous avons largement adapté et augmenté pour les fins du devoir.
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -33,12 +34,42 @@ var ChessGame = function (_React$Component) {
       isFirstClick: true,
       fromI: "",
       fromJ: 0,
-      whiteIsNext: true
+      whiteIsNext: true,
+      winner: ""
     };
+    _this.restart = _this.restart.bind(_this);
+    _this.load = _this.load.bind(_this);
     return _this;
   }
 
   _createClass(ChessGame, [{
+    key: "restart",
+    value: function restart() {
+      this.setState({
+        isFirstWhiteMove: true,
+        isFirstBlackMove: true,
+        squares: JSON.parse(this.init),
+        isFirstClick: true,
+        fromI: "",
+        fromJ: 0,
+        whiteIsNext: true,
+        winner: ""
+      });
+    }
+  }, {
+    key: "load",
+    value: function load() {
+      var _this2 = this;
+
+      fetch('http://www-ens.iro.umontreal.ca/~levestev/resources/ift3225/tp3/chess.json').then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        _this2.setState({
+          squares: data
+        });
+      });
+    }
+  }, {
     key: "isCurrentPlayerPiece",
     value: function isCurrentPlayerPiece(piece) {
       var player = this.state.whiteIsNext ? "-W" : "-B";
@@ -103,65 +134,78 @@ var ChessGame = function (_React$Component) {
   }, {
     key: "handleClick",
     value: function handleClick(i, j) {
-      var clickedPiece = this.state.squares[i][j];
+      if (this.state.winner === "") {
+        var clickedPiece = this.state.squares[i][j];
 
-      // First, click a square containing a current player's piece.
-      if (this.state.isFirstClick) {
-        if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
-          document.getElementById(i + j).classList.add("clicked");
-          this.setState({
-            // Update move state.
-            isFirstClick: !this.state.isFirstClick,
-            fromI: i,
-            fromJ: j
-          });
-        }
-      } else {
-        // Then, click the destination square to move the piece.
-        var fromI = this.state.fromI;
-        var fromJ = this.state.fromJ;
-        var movingPiece = this.state.squares[fromI][fromJ];
-        console.log(movingPiece); // Test
-        var originSquare = document.getElementById(fromI + fromJ);
-
-        // If click the same square, unselect it. 
-        if (i === fromI && j === fromJ) {
-          originSquare.classList.remove("clicked");
-          this.setState({
-            // Reset move state.
-            isFirstClick: !this.state.isFirstClick,
-            fromI: "",
-            fromJ: 0
-          });
-        } else {
-          // Else, try moving the piece.
-          if (!this.isCurrentPlayerPiece(clickedPiece) && this.isMoveLegal(movingPiece, i, j)) {
-            // Update squares' states.
-            originSquare.classList.remove("clicked");
-            if (fromI !== i) {
-              var _Object$assign3;
-
-              // Corrige un bug dans l'écriture de squares.
-              this.setState({
-                squares: Object.assign({}, this.state.squares, (_Object$assign3 = {}, _defineProperty(_Object$assign3, i, Object.assign({}, this.state.squares[i], _defineProperty({}, j, movingPiece))), _defineProperty(_Object$assign3, fromI, Object.assign({}, this.state.squares[fromI], _defineProperty({}, fromJ, ""))), _Object$assign3))
-              });
-            } else {
-              var _Object$assign4;
-
-              // Si i === fromI.
-              this.setState({
-                squares: Object.assign({}, this.state.squares, _defineProperty({}, i, Object.assign({}, this.state.squares[i], (_Object$assign4 = {}, _defineProperty(_Object$assign4, j, movingPiece), _defineProperty(_Object$assign4, fromJ, ""), _Object$assign4))))
-              });
-            }
-            // Reset move state.
+        // First, click a square containing a current player's piece.
+        if (this.state.isFirstClick) {
+          if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
+            document.getElementById(i + j).classList.add("clicked");
             this.setState({
+              // Update move state.
+              isFirstClick: !this.state.isFirstClick,
+              fromI: i,
+              fromJ: j
+            });
+          }
+        } else {
+          // Then, click the destination square to move the piece.
+          var fromI = this.state.fromI;
+          var fromJ = this.state.fromJ;
+          var movingPiece = this.state.squares[fromI][fromJ];
+          console.log(movingPiece); // Test
+          var originSquare = document.getElementById(fromI + fromJ);
+
+          // If click the same square, unselect it. 
+          if (i === fromI && j === fromJ) {
+            originSquare.classList.remove("clicked");
+            this.setState({
+              // Reset move state.
               isFirstClick: !this.state.isFirstClick,
               fromI: "",
-              fromJ: 0,
-              whiteIsNext: !this.state.whiteIsNext,
-              isFirstWhiteMove: false,
-              isFirstBlackMove: this.state.isFirstWhiteMove ? true : false
+              fromJ: 0
             });
+          } else {
+            // Else, try moving the piece.
+            if (!this.isCurrentPlayerPiece(clickedPiece) && this.isMoveLegal(movingPiece, i, j)) {
+              // Update squares' states.
+              originSquare.classList.remove("clicked");
+              if (fromI !== i) {
+                var _Object$assign3;
+
+                // Corrige un bug dans l'écriture de squares.
+                this.setState({
+                  squares: Object.assign({}, this.state.squares, (_Object$assign3 = {}, _defineProperty(_Object$assign3, i, Object.assign({}, this.state.squares[i], _defineProperty({}, j, movingPiece))), _defineProperty(_Object$assign3, fromI, Object.assign({}, this.state.squares[fromI], _defineProperty({}, fromJ, ""))), _Object$assign3))
+                });
+              } else {
+                var _Object$assign4;
+
+                // Si i === fromI.
+                this.setState({
+                  squares: Object.assign({}, this.state.squares, _defineProperty({}, i, Object.assign({}, this.state.squares[i], (_Object$assign4 = {}, _defineProperty(_Object$assign4, j, movingPiece), _defineProperty(_Object$assign4, fromJ, ""), _Object$assign4))))
+                });
+              }
+              // Reset move state.
+              this.setState({
+                isFirstClick: !this.state.isFirstClick,
+                fromI: "",
+                fromJ: 0,
+                whiteIsNext: !this.state.whiteIsNext,
+                isFirstWhiteMove: false,
+                isFirstBlackMove: this.state.isFirstWhiteMove ? true : false
+              });
+            }
+
+            // Victory management.
+            if (clickedPiece.charAt(0) === "K") {
+              var enemy = this.state.whiteIsNext ? "B" : "W";
+              var winner = this.state.whiteIsNext ? "Blanc" : "Noir";
+              if (clickedPiece.charAt(2) === enemy) {
+                this.setState({
+                  winner: winner
+                });
+              }
+            }
           }
         }
       }
@@ -169,9 +213,14 @@ var ChessGame = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
-      var status = "Prochain joueur : " + (this.state.whiteIsNext ? "blanc" : "noir");
+      var status = void 0;
+      if (this.state.winner === "") {
+        status = "Prochain joueur : " + (this.state.whiteIsNext ? "blanc" : "noir");
+      } else {
+        status = this.state.winner + " gagne !";
+      }
 
       return React.createElement(
         "div",
@@ -180,15 +229,29 @@ var ChessGame = function (_React$Component) {
           "div",
           { className: "game-info" },
           React.createElement(
-            "div",
+            "p",
             null,
             status
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "game-controls" },
+          React.createElement(
+            "button",
+            { className: "btn btn-secondary", onClick: this.restart },
+            "Recommencer"
+          ),
+          React.createElement(
+            "button",
+            { className: "btn btn-secondary", onClick: this.load },
+            "Charger sauvegarde"
           )
         ),
         React.createElement(Board, {
           squares: this.state.squares,
           onClick: function onClick(i, j) {
-            return _this2.handleClick(i, j);
+            return _this3.handleClick(i, j);
           }
         })
       );
@@ -200,5 +263,3 @@ var ChessGame = function (_React$Component) {
 
 var domContainer = document.querySelector('#chess_game');
 ReactDOM.render(React.createElement(ChessGame, null), domContainer);
-
-// ============================================================================

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Examen 3 portant sur ReactJS et AJAX réalisé dans le cadre du cours IFT3225A - Technologies de l'Internet à la session E2020.",
   "main": "index.js",
+  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

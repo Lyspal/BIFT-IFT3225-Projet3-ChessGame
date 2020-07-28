@@ -124,6 +124,17 @@ class ChessGame extends React.Component {
     fetch('http://www-ens.iro.umontreal.ca/~levestev/resources/ift3225/tp3/chess.json')
       .then(response => response.json())
       .then(data => {
+        // Change Kn to N.
+        for (let i in data) {
+          for (let j in data[i]) {
+            if (data[i][j] === "Kn-B") {
+              data[i][j] = "N-B";
+            } else if (data[i][j] === "Kn-W") {
+              data[i][j] = "N-W";
+            }
+          }
+        }
+
         this.setState({
           squares: data,
         });
@@ -256,7 +267,7 @@ class ChessGame extends React.Component {
                 },
               });
             }
-            
+
             // Reset move state.
             this.setState({
                 isFirstClick: !this.state.isFirstClick,

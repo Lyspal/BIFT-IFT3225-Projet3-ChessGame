@@ -64,6 +64,17 @@ var ChessGame = function (_React$Component) {
       fetch('http://www-ens.iro.umontreal.ca/~levestev/resources/ift3225/tp3/chess.json').then(function (response) {
         return response.json();
       }).then(function (data) {
+        // Change Kn to N.
+        for (var i in data) {
+          for (var j in data[i]) {
+            if (data[i][j] === "Kn-B") {
+              data[i][j] = "N-B";
+            } else if (data[i][j] === "Kn-W") {
+              data[i][j] = "N-W";
+            }
+          }
+        }
+
         _this2.setState({
           squares: data
         });

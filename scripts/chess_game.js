@@ -83,15 +83,19 @@ var ChessGame = function (_React$Component) {
           var isCapture = isDiagMove && isEnemy;
           return isPremier || isReg || isCapture;
         case 'R':
-          return true;
+          return Math.abs(numI - fromI) === 0 || Math.abs(j - fromJ) === 0;
         case 'N':
-          return true;
+          var isVL = Math.abs(numI - fromI) === 2 && Math.abs(j - fromJ) === 1;
+          var isHL = Math.abs(numI - fromI) === 1 && Math.abs(j - fromJ) === 2;
+          return isVL || isHL;
         case 'B':
-          return true;
+          return Math.abs(numI - fromI) === Math.abs(j - fromJ);
         case 'Q':
-          return true;
+          var likeR = Math.abs(numI - fromI) === 0 || Math.abs(j - fromJ) === 0;
+          var likeB = Math.abs(numI - fromI) === Math.abs(j - fromJ);
+          return likeR || likeB;
         case 'K':
-          return Math.abs(numI - fromI) <= 1 && Math.abs(j - fromJ) <= 1;;
+          return Math.abs(numI - fromI) <= 1 && Math.abs(j - fromJ) <= 1;
         default:
           return false;
       }
@@ -134,11 +138,6 @@ var ChessGame = function (_React$Component) {
           if (!this.isCurrentPlayerPiece(clickedPiece) && this.isMoveLegal(movingPiece, i, j)) {
             // Update squares' states.
             originSquare.classList.remove("clicked");
-            console.log(movingPiece);
-            console.log(fromI);
-            console.log(i);
-            console.log(fromJ);
-            console.log(j);
             if (fromI !== i) {
               var _Object$assign3;
 

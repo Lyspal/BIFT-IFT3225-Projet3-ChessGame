@@ -91,7 +91,7 @@ var ChessGame = function (_React$Component) {
         case 'Q':
           return true;
         case 'K':
-          return Math.abs(numI - fromI) <= 1 && Math.abs(j - fromJ);;
+          return Math.abs(numI - fromI) <= 1 && Math.abs(j - fromJ) <= 1;;
         default:
           return false;
       }
@@ -99,8 +99,6 @@ var ChessGame = function (_React$Component) {
   }, {
     key: "handleClick",
     value: function handleClick(i, j) {
-      var _this2 = this;
-
       var clickedPiece = this.state.squares[i][j];
 
       // First, click a square containing a current player's piece.
@@ -119,6 +117,7 @@ var ChessGame = function (_React$Component) {
         var fromI = this.state.fromI;
         var fromJ = this.state.fromJ;
         var movingPiece = this.state.squares[fromI][fromJ];
+        console.log(movingPiece); // Test
         var originSquare = document.getElementById(fromI + fromJ);
 
         // If click the same square, unselect it. 
@@ -135,19 +134,34 @@ var ChessGame = function (_React$Component) {
           if (!this.isCurrentPlayerPiece(clickedPiece) && this.isMoveLegal(movingPiece, i, j)) {
             // Update squares' states.
             originSquare.classList.remove("clicked");
-            this.setState(function (prevState) {
+            console.log(movingPiece);
+            console.log(fromI);
+            console.log(i);
+            console.log(fromJ);
+            console.log(j);
+            if (fromI !== i) {
               var _Object$assign3;
 
-              return {
-                squares: Object.assign({}, prevState.squares, (_Object$assign3 = {}, _defineProperty(_Object$assign3, i, Object.assign({}, prevState.squares[i], _defineProperty({}, j, movingPiece))), _defineProperty(_Object$assign3, fromI, Object.assign({}, prevState.squares[fromI], _defineProperty({}, fromJ, ""))), _Object$assign3)),
-                // Reset move state.
-                isFirstClick: !prevState.isFirstClick,
-                fromI: "",
-                fromJ: 0,
-                whiteIsNext: !prevState.whiteIsNext,
-                isFirstWhiteMove: false,
-                isFirstBlackMove: _this2.state.isFirstWhiteMove ? true : false
-              };
+              // Corrige un bug dans l'écriture de squares.
+              this.setState({
+                squares: Object.assign({}, this.state.squares, (_Object$assign3 = {}, _defineProperty(_Object$assign3, i, Object.assign({}, this.state.squares[i], _defineProperty({}, j, movingPiece))), _defineProperty(_Object$assign3, fromI, Object.assign({}, this.state.squares[fromI], _defineProperty({}, fromJ, ""))), _Object$assign3))
+              });
+            } else {
+              var _Object$assign4;
+
+              // Si i === fromI.
+              this.setState({
+                squares: Object.assign({}, this.state.squares, _defineProperty({}, i, Object.assign({}, this.state.squares[i], (_Object$assign4 = {}, _defineProperty(_Object$assign4, j, movingPiece), _defineProperty(_Object$assign4, fromJ, ""), _Object$assign4))))
+              });
+            }
+            // Reset move state.
+            this.setState({
+              isFirstClick: !this.state.isFirstClick,
+              fromI: "",
+              fromJ: 0,
+              whiteIsNext: !this.state.whiteIsNext,
+              isFirstWhiteMove: false,
+              isFirstBlackMove: this.state.isFirstWhiteMove ? true : false
             });
           }
         }
@@ -156,7 +170,7 @@ var ChessGame = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var status = "Prochain joueur : " + (this.state.whiteIsNext ? "blanc" : "noir");
 
@@ -175,7 +189,7 @@ var ChessGame = function (_React$Component) {
         React.createElement(Board, {
           squares: this.state.squares,
           onClick: function onClick(i, j) {
-            return _this3.handleClick(i, j);
+            return _this2.handleClick(i, j);
           }
         })
       );

@@ -153,7 +153,7 @@ class ChessGame extends React.Component {
       case 'Q':
         return true;
       case 'K':
-        return (Math.abs(numI - fromI) <= 1) && (Math.abs(j - fromJ));;
+        return (Math.abs(numI - fromI) <= 1) && (Math.abs(j - fromJ) <= 1);;
       default:
         return false;
     }
@@ -177,6 +177,7 @@ class ChessGame extends React.Component {
       let fromI = this.state.fromI;
       let fromJ = this.state.fromJ;
       let movingPiece = this.state.squares[fromI][fromJ];
+      console.log(movingPiece); // Test
       let originSquare = document.getElementById(fromI + fromJ);
 
       // If click the same square, unselect it. 
@@ -195,26 +196,46 @@ class ChessGame extends React.Component {
         ) {
           // Update squares' states.
           originSquare.classList.remove("clicked");
-          this.setState(prevState => ({
-            squares: {
-              ...prevState.squares,
-              [i]: {
-                ...prevState.squares[i],
-                [j]: movingPiece,
+          console.log(movingPiece);
+          console.log(fromI);
+          console.log(i);
+          console.log(fromJ);
+          console.log(j);
+          if (fromI !== i) {  // Corrige un bug dans l'écriture de squares.
+            this.setState({
+              squares: {
+                ...this.state.squares,
+                [i]: {
+                  ...this.state.squares[i],
+                  [j]: movingPiece,
+                },
+                [fromI]: {
+                  ...this.state.squares[fromI],
+                  [fromJ]: "",
+                }
               },
-              [fromI]: {
-                ...prevState.squares[fromI],
-                [fromJ]: "",
-              }
-            },
-            // Reset move state.
-            isFirstClick: !prevState.isFirstClick,
-            fromI: "",
-            fromJ: 0,
-            whiteIsNext: !prevState.whiteIsNext,
-            isFirstWhiteMove: false,
-            isFirstBlackMove: this.state.isFirstWhiteMove ? true : false,
-          }));
+            });
+          } else {  // Si i === fromI.
+            this.setState({
+              squares: {
+                ...this.state.squares,
+                [i]: {
+                  ...this.state.squares[i],
+                  [j]: movingPiece,
+                  [fromJ]: "",
+                },
+              },
+            });
+          }
+          // Reset move state.
+          this.setState({
+              isFirstClick: !this.state.isFirstClick,
+              fromI: "",
+              fromJ: 0,
+              whiteIsNext: !this.state.whiteIsNext,
+              isFirstWhiteMove: false,
+              isFirstBlackMove: this.state.isFirstWhiteMove ? true : false,
+          });
         }
       }
     }

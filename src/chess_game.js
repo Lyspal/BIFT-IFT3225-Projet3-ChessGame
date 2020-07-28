@@ -164,7 +164,9 @@ class ChessGame extends React.Component {
         let isUpByTwo = (numI - fromI === 2) && (j - fromJ === 0);
         let isPremier = isStartPos && isUpByTwo && isMiddleEmpty;
         // Coup régulier.
-        let isReg = (numI - fromI === 1) && (j - fromJ === 0);
+        let isEmpty = this.state.squares[i][j] === "";
+        let isForward = (numI - fromI === 1) && (j - fromJ === 0);
+        let isReg = isEmpty && isForward;
         // Coup de capture.
         let enemy = this.state.whiteIsNext ? "B" : "W";
         let isEnemy = this.state.squares[i][j].charAt(2) === enemy;
@@ -254,6 +256,7 @@ class ChessGame extends React.Component {
                 },
               });
             }
+            
             // Reset move state.
             this.setState({
                 isFirstClick: !this.state.isFirstClick,
@@ -263,16 +266,16 @@ class ChessGame extends React.Component {
                 isFirstWhiteMove: false,
                 isFirstBlackMove: this.state.isFirstWhiteMove ? true : false,
             });
-          }
 
-          // Victory management.
-          if (clickedPiece.charAt(0) === "K") {
-            let enemy = this.state.whiteIsNext ? "B" : "W";
-            let winner = this.state.whiteIsNext ? "Blanc" : "Noir";
-            if (clickedPiece.charAt(2) === enemy) {
-              this.setState({
-                winner: winner,
-              });
+            // Victory management.
+            if (clickedPiece.charAt(0) === "K") {
+              let enemy = this.state.whiteIsNext ? "B" : "W";
+              let winner = this.state.whiteIsNext ? "Blanc" : "Noir";
+              if (clickedPiece.charAt(2) === enemy) {
+                this.setState({
+                  winner: winner,
+                });
+              }
             }
           }
         }

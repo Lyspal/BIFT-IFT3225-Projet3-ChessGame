@@ -106,7 +106,9 @@ var ChessGame = function (_React$Component) {
           var isUpByTwo = numI - fromI === 2 && j - fromJ === 0;
           var isPremier = isStartPos && isUpByTwo && isMiddleEmpty;
           // Coup régulier.
-          var isReg = numI - fromI === 1 && j - fromJ === 0;
+          var isEmpty = this.state.squares[i][j] === "";
+          var isForward = numI - fromI === 1 && j - fromJ === 0;
+          var isReg = isEmpty && isForward;
           // Coup de capture.
           var enemy = this.state.whiteIsNext ? "B" : "W";
           var isEnemy = this.state.squares[i][j].charAt(2) === enemy;
@@ -185,6 +187,7 @@ var ChessGame = function (_React$Component) {
                   squares: Object.assign({}, this.state.squares, _defineProperty({}, i, Object.assign({}, this.state.squares[i], (_Object$assign4 = {}, _defineProperty(_Object$assign4, j, movingPiece), _defineProperty(_Object$assign4, fromJ, ""), _Object$assign4))))
                 });
               }
+
               // Reset move state.
               this.setState({
                 isFirstClick: !this.state.isFirstClick,
@@ -194,16 +197,16 @@ var ChessGame = function (_React$Component) {
                 isFirstWhiteMove: false,
                 isFirstBlackMove: this.state.isFirstWhiteMove ? true : false
               });
-            }
 
-            // Victory management.
-            if (clickedPiece.charAt(0) === "K") {
-              var enemy = this.state.whiteIsNext ? "B" : "W";
-              var winner = this.state.whiteIsNext ? "Blanc" : "Noir";
-              if (clickedPiece.charAt(2) === enemy) {
-                this.setState({
-                  winner: winner
-                });
+              // Victory management.
+              if (clickedPiece.charAt(0) === "K") {
+                var enemy = this.state.whiteIsNext ? "B" : "W";
+                var winner = this.state.whiteIsNext ? "Blanc" : "Noir";
+                if (clickedPiece.charAt(2) === enemy) {
+                  this.setState({
+                    winner: winner
+                  });
+                }
               }
             }
           }

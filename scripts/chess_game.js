@@ -42,6 +42,9 @@ var ChessGame = function (_React$Component) {
     return _this;
   }
 
+  // Recommence une partie en remettant la grille à l'état initial.
+
+
   _createClass(ChessGame, [{
     key: "restart",
     value: function restart() {
@@ -56,6 +59,9 @@ var ChessGame = function (_React$Component) {
         winner: ""
       });
     }
+
+    // Requête asynchrone pour la tâche 2 des consignes, en utilisant l'API fetch.
+
   }, {
     key: "load",
     value: function load() {
@@ -64,7 +70,7 @@ var ChessGame = function (_React$Component) {
       fetch('http://www-ens.iro.umontreal.ca/~levestev/resources/ift3225/tp3/chess.json').then(function (response) {
         return response.json();
       }).then(function (data) {
-        // Change Kn to N.
+        // Change Kn pour N.
         for (var i in data) {
           for (var j in data[i]) {
             if (data[i][j] === "Kn-B") {
@@ -78,6 +84,8 @@ var ChessGame = function (_React$Component) {
         _this2.setState({
           squares: data
         });
+      }).catch(function (error) {
+        console.log(error);
       });
     }
   }, {
@@ -101,16 +109,9 @@ var ChessGame = function (_React$Component) {
 
       var fromJ = this.state.fromJ;
 
-      // Test
-      console.log(numI + ", " + j);
-      console.log(fromI + ", " + fromJ);
-
-      // Ne pas capturer sa propre pièce.
-      // if (this.state.squares[i][j])
-
       switch (piece.charAt(0)) {
         case 'P':
-          // TODO Cas du premier coup.
+          // Cas du premier coup.
           var isStartPos = fromI === 2;
           var inFront = this.state.whiteIsNext ? "f" : "c";
           var isMiddleEmpty = this.state.squares[inFront][fromJ] === "";
@@ -150,43 +151,41 @@ var ChessGame = function (_React$Component) {
       if (this.state.winner === "") {
         var clickedPiece = this.state.squares[i][j];
 
-        // First, click a square containing a current player's piece.
+        // Premier clic sur une cellule contenant une pièce du joueur actuel.
         if (this.state.isFirstClick) {
           if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
             document.getElementById(i + j).classList.add("clicked");
             this.setState({
-              // Update move state.
+              // Met à jour l'état du mouvement.
               isFirstClick: !this.state.isFirstClick,
               fromI: i,
               fromJ: j
             });
           }
         } else {
-          // Then, click the destination square to move the piece.
+          // Deuxième clic sur la cellule de destination pour bouger la pièce.
           var fromI = this.state.fromI;
           var fromJ = this.state.fromJ;
           var movingPiece = this.state.squares[fromI][fromJ];
-          console.log(movingPiece); // Test
           var originSquare = document.getElementById(fromI + fromJ);
 
-          // If click the same square, unselect it. 
+          // Si clic sur la même cellule, désactiver la sélection.
           if (i === fromI && j === fromJ) {
             originSquare.classList.remove("clicked");
             this.setState({
-              // Reset move state.
+              // Remet à zéro l'état du mouvement.
               isFirstClick: !this.state.isFirstClick,
               fromI: "",
               fromJ: 0
             });
           } else {
-            // Else, try moving the piece.
+            // Sinon, essayer de bouger la pièce.
             if (!this.isCurrentPlayerPiece(clickedPiece) && this.isMoveLegal(movingPiece, i, j)) {
-              // Update squares' states.
+              // Met à jour l'état des cellules d'origine et de destination.
               originSquare.classList.remove("clicked");
               if (fromI !== i) {
                 var _Object$assign3;
 
-                // Corrige un bug dans l'écriture de squares.
                 this.setState({
                   squares: Object.assign({}, this.state.squares, (_Object$assign3 = {}, _defineProperty(_Object$assign3, i, Object.assign({}, this.state.squares[i], _defineProperty({}, j, movingPiece))), _defineProperty(_Object$assign3, fromI, Object.assign({}, this.state.squares[fromI], _defineProperty({}, fromJ, ""))), _Object$assign3))
                 });
@@ -199,7 +198,7 @@ var ChessGame = function (_React$Component) {
                 });
               }
 
-              // Reset move state.
+              // Remet à zéro l'état du mouvement.
               this.setState({
                 isFirstClick: !this.state.isFirstClick,
                 fromI: "",
@@ -209,7 +208,7 @@ var ChessGame = function (_React$Component) {
                 isFirstBlackMove: this.state.isFirstWhiteMove ? true : false
               });
 
-              // Victory management.
+              // Gère la victoire.
               if (clickedPiece.charAt(0) === "K") {
                 var enemy = this.state.whiteIsNext ? "B" : "W";
                 var winner = this.state.whiteIsNext ? "Blanc" : "Noir";

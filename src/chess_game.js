@@ -107,6 +107,7 @@ class ChessGame extends React.Component {
     this.load = this.load.bind(this);
   }
 
+  // Recommence une partie en remettant la grille à l'état initial.
   restart() {
     this.setState({
       isFirstWhiteMove: true,
@@ -120,11 +121,12 @@ class ChessGame extends React.Component {
     });
   }
 
+  // Requête asynchrone pour la tâche 2 des consignes, en utilisant l'API fetch.
   load() {
     fetch('http://www-ens.iro.umontreal.ca/~levestev/resources/ift3225/tp3/chess.json')
       .then(response => response.json())
       .then(data => {
-        // Change Kn to N.
+        // Change Kn pour N.
         for (let i in data) {
           for (let j in data[i]) {
             if (data[i][j] === "Kn-B") {
@@ -138,6 +140,9 @@ class ChessGame extends React.Component {
         this.setState({
           squares: data,
         });
+      })
+      .catch(error => {
+        console.log(error);
       })
   }
 
@@ -159,16 +164,9 @@ class ChessGame extends React.Component {
 
     let fromJ = this.state.fromJ;
 
-    // Test
-    console.log(`${numI}, ${j}`);
-    console.log(`${fromI}, ${fromJ}`);
-
-    // Ne pas capturer sa propre pièce.
-    // if (this.state.squares[i][j])
-
     switch (piece.charAt(0)) {
       case 'P':
-        // TODO Cas du premier coup.
+        // Cas du premier coup.
         let isStartPos = fromI === 2;
         let inFront = this.state.whiteIsNext ? "f" : "c";
         let isMiddleEmpty = this.state.squares[inFront][fromJ] === "";
@@ -207,41 +205,40 @@ class ChessGame extends React.Component {
     if (this.state.winner === "") {
       let clickedPiece = this.state.squares[i][j];
 
-      // First, click a square containing a current player's piece.
+      // Premier clic sur une cellule contenant une pièce du joueur actuel.
       if (this.state.isFirstClick) {
         if (clickedPiece !== "" && this.isCurrentPlayerPiece(clickedPiece)) {
           document.getElementById(i + j).classList.add("clicked");
           this.setState({
-            // Update move state.
+            // Met à jour l'état du mouvement.
             isFirstClick: !this.state.isFirstClick,
             fromI: i,
             fromJ: j,
           })
         }
-      } else {  // Then, click the destination square to move the piece.
+      } else {  // Deuxième clic sur la cellule de destination pour bouger la pièce.
         let fromI = this.state.fromI;
         let fromJ = this.state.fromJ;
         let movingPiece = this.state.squares[fromI][fromJ];
-        console.log(movingPiece); // Test
         let originSquare = document.getElementById(fromI + fromJ);
 
-        // If click the same square, unselect it. 
+        // Si clic sur la même cellule, désactiver la sélection.
         if (i === fromI && j === fromJ) {
           originSquare.classList.remove("clicked");
           this.setState({
-            // Reset move state.
+            // Remet à zéro l'état du mouvement.
             isFirstClick: !this.state.isFirstClick,
             fromI: "",
             fromJ: 0,
           });
-        } else {  // Else, try moving the piece.
+        } else {  // Sinon, essayer de bouger la pièce.
           if (
             !this.isCurrentPlayerPiece(clickedPiece) &&
             this.isMoveLegal(movingPiece, i, j)
           ) {
-            // Update squares' states.
+            // Met à jour l'état des cellules d'origine et de destination.
             originSquare.classList.remove("clicked");
-            if (fromI !== i) {  // Corrige un bug dans l'écriture de squares.
+            if (fromI !== i) {
               this.setState({
                 squares: {
                   ...this.state.squares,
@@ -268,7 +265,7 @@ class ChessGame extends React.Component {
               });
             }
 
-            // Reset move state.
+            // Remet à zéro l'état du mouvement.
             this.setState({
                 isFirstClick: !this.state.isFirstClick,
                 fromI: "",
@@ -278,7 +275,7 @@ class ChessGame extends React.Component {
                 isFirstBlackMove: this.state.isFirstWhiteMove ? true : false,
             });
 
-            // Victory management.
+            // Gère la victoire.
             if (clickedPiece.charAt(0) === "K") {
               let enemy = this.state.whiteIsNext ? "B" : "W";
               let winner = this.state.whiteIsNext ? "Blanc" : "Noir";
@@ -308,8 +305,12 @@ class ChessGame extends React.Component {
           <p>{status}</p>
         </div>
         <div className="game-controls">
-          <button className="btn btn-secondary btn-sm" onClick={this.restart}>Recommencer</button>
-          <button className="btn btn-secondary btn-sm" onClick={this.load}>Charger sauvegarde</button>
+          <button className="btn btn-secondary btn-sm" onClick={this.restart}>
+            Recommencer
+          </button>
+          <button className="btn btn-secondary btn-sm" onClick={this.load}>
+            Charger sauvegarde
+          </button>
         </div>
         <Board
           squares={this.state.squares}

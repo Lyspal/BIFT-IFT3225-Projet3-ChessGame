@@ -1,22 +1,22 @@
 {
-  "name": "BIFT-IFT3225-Examen3",
+  "name": "BIFT-IFT3225-Projet3",
   "version": "1.0.0",
-  "description": "Examen 3 portant sur ReactJS et AJAX réalisé dans le cadre du cours IFT3225A - Technologies de l'Internet à la session E2020.",
+  "description": "Projet 3 portant sur ReactJS et AJAX réalisé dans le cadre du cours IFT3225A - Technologies de l'Internet à la session E2020.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lyspal/BIFT-IFT3225-Examen3.git"
+    "url": "git+https://github.com/Lyspal/BIFT-IFT3225-Projet3.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Lyspal/BIFT-IFT3225-Examen3/issues"
+    "url": "https://github.com/Lyspal/BIFT-IFT3225-Projet3/issues"
   },
-  "homepage": "https://github.com/Lyspal/BIFT-IFT3225-Examen3#readme",
+  "homepage": "https://github.com/Lyspal/BIFT-IFT3225-Projet3#readme",
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2"
